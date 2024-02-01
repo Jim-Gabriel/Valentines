@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEBI'S VALENTINE INVITATION</title>
+    <style>
+        body {
+            font-family: 'Cambria', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            transition: background 1s;
+        }
+
+        #invitation-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+            transition: opacity 1s;
+            position: relative; 
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            color: #ff0066;
+        }
+
+        p {
+            margin-top: 20px;
+            color: #333;
+        }
+
+        #heart {
+            animation: heartbeat 1.5s infinite;
+            font-size: 2em;
+            color: #ff0066;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .btn {
+            background-color: #ff0066;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #popup {
+            position: absolute;
+            background-color: #ff0066;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            z-index: 2; 
+            top: 50%;
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+        }
+    </style>
+</head>
+<body>
+
+    <div id="invitation-container">
+        <h1 id="page-title">HI BABY, LOURISELLE!</h1>
+        <p id="page-text">I have something special for you.<br><span id="heart">❤</span></p>
+        <button id="next-btn" class="btn" onclick="nextPage()">Next</button>
+        <button id="yes-btn" class="btn hidden" onclick="showMessage('Yes')">Yes</button>
+        <button id="no-btn" class="btn disabled hidden" onclick="showError()">No</button>
+        <div id="popup">NO PLEASE 😭</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.0.1/dist/canvas-confetti.min.js"></script>
+    <script>
+        let currentPage = 1;
+
+        function nextPage() {
+            currentPage++;
+            if (currentPage <= 5) {
+                updatePage();
+            } else if (currentPage === 6) {
+                showFinalPage();
+            }
+        }
+
+        function updatePage() {
+            let backgroundUrl;
+            let title, text;
+            switch (currentPage) {
+                case 2:
+                    backgroundUrl = 'url("1.jpg")';
+                    title = "You Know What Baby?";
+                    text = "I really want to ask you this.";
+                    break;
+                case 3:
+                    backgroundUrl = 'url("2.jpg")';
+                    title = "But";
+                    text = "I am really shy even though we've been together for 5 years.";
+                    break;
+                case 4:
+                    backgroundUrl = 'url("3.jpg")';
+                    title = "So now";
+                    text = "I will make sure to have a unique way of asking you.";
+                    break;
+                case 5:
+                    backgroundUrl = 'url("5.jpg")';
+                    title = "And";
+                    text = "I hope this small thing will make you smile and 'kilig' baby.";
+                    break;
+                
+            }
+
+            document.body.style.backgroundImage = backgroundUrl;
+
+            document.getElementById('invitation-container').innerHTML = `
+                <h1 id="page-title">${title}</h1>
+                <p id="page-text">${text}<br><span id="heart">❤</span></p>
+                <button id="next-btn" class="btn" onclick="nextPage()">Next</button>
+            `;
+        }
+
+        function showFinalPage() {
+            document.body.style.backgroundImage = 'url("6.jpg")';
+            document.getElementById('invitation-container').innerHTML = `
+                <h1 id="page-title">Baby, will you be my date this Valentine's Day?</h1>
+                <p id="page-text" class="hidden"></p>
+                <button id="no-btn" class="btn disabled" onclick="showError()" onmouseover="showPopup()" onmouseout="hidePopup()">No</button>
+                <button id="yes-btn" class="btn" onclick="showMessage('Yes')">Yes</button>
+            `;
+        }
+
+        function showMessage(response) {
+            confetti(); 
+            alert(`I LOVE YOU SO MUCH, BABY! SEE YOU ON VALENTINE'S DAY! ❤`);
+            
+        }
+
+        
+
+        function showPopup() {
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('popup').innerHTML = 'NO PLEASE 😭';
+        }
+
+        function hidePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        // Confetti function
+        function confetti() {
+            var duration = 5 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                var particleCount = 50 * (timeLeft / duration);
+                
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+
+    </script>
+
+</body>
+</html>
+    
